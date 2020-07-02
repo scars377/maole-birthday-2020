@@ -1,33 +1,27 @@
-import shit from './assets/bad-shit.png';
-import snake from './assets/bad-snake.png';
-import spider from './assets/bad-spider.png';
-import corn from './assets/icon-corn.png';
-import ice from './assets/icon-ice.png';
-import mango from './assets/icon-mango.png';
-import popsicle from './assets/icon-popsicle.png';
-import pudding from './assets/icon-pudding.png';
-import toast from './assets/icon-toast.png';
 import { MOVE_SPEED } from './constants';
 import IconBitmap from './IconBitmap';
 
 const { Container, Tween, Ease } = createjs;
-
-const bads = [shit, snake, spider];
-const goods = [corn, pudding, ice, mango, popsicle, toast];
-
-const badImgs = bads.map((img) => new IconBitmap(img));
-const goodImgs = goods.map((img) => new IconBitmap(img));
-
+const bads = ['shit', 'snake', 'spider'];
+const goods = ['corn', 'pudding', 'ice', 'mango', 'popsicle', 'toast'];
 const sample = (arr) => arr[parseInt(Math.random() * arr.length, 10)];
 
-export default class extends Container {
+export default class Icon extends Container {
+  static bitmaps = {};
+
   t = 0;
   isHit = false;
   constructor(good) {
     super();
 
+    const id = sample(good ? goods : bads);
+
     this.good = good;
-    this.img = sample(good ? goodImgs : badImgs).clone();
+    if (!Icon.bitmaps[id]) {
+      Icon.bitmaps[id] = new IconBitmap(id);
+    }
+    this.img = Icon.bitmaps[id].clone();
+
     this.addChild(this.img);
 
     this.x = 1280 + 200;

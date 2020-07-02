@@ -1,6 +1,4 @@
-import imgSad from './assets/maole-sad.png';
-import imgHappy from './assets/maole-happy.png';
-import imgUp from './assets/maole-up.png';
+import Preload from './Preload';
 
 const { Sprite, SpriteSheet } = createjs;
 
@@ -13,7 +11,11 @@ export default class extends Sprite {
 
   constructor() {
     const spriteSheet = new SpriteSheet({
-      images: [imgSad, imgHappy, imgUp],
+      images: [
+        Preload.get('imgSad'),
+        Preload.get('imgHappy'),
+        Preload.get('imgUp'),
+      ],
       frames: { width, height },
       animations: {
         up: 2,

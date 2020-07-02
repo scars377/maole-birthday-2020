@@ -19,7 +19,7 @@ module.exports = {
         loader: 'babel-loader',
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.(png|jpe?g|gif|wav|mp3)$/i,
         loader: 'file-loader',
       },
     ],

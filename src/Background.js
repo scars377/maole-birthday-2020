@@ -1,4 +1,4 @@
-import bg from './assets/bg.png';
+import Preload from './Preload';
 import { MOVE_SPEED } from './constants';
 
 const { Container, Bitmap } = createjs;
@@ -11,7 +11,7 @@ export default class extends Container {
   constructor() {
     super();
 
-    const img1 = new Bitmap(bg);
+    const img1 = new Bitmap(Preload.get('bg'));
     const img2 = img1.clone();
     img2.x = width;
     this.regY = height;

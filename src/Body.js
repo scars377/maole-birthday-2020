@@ -1,12 +1,4 @@
-import run1 from './assets/run1.png';
-import run2 from './assets/run2.png';
-import run3 from './assets/run3.png';
-import run4 from './assets/run4.png';
-import run5 from './assets/run5.png';
-import run6 from './assets/run6.png';
-import run7 from './assets/run7.png';
-import run8 from './assets/run8.png';
-
+import Preload from './Preload';
 const { Sprite, SpriteSheet } = createjs;
 
 const width = 220;
@@ -16,7 +8,16 @@ export default class extends Sprite {
   // export default class extends Sprite {
   constructor() {
     const spriteSheet = new SpriteSheet({
-      images: [run1, run2, run3, run4, run5, run6, run7, run8],
+      images: [
+        Preload.get('run1'),
+        Preload.get('run2'),
+        Preload.get('run3'),
+        Preload.get('run4'),
+        Preload.get('run5'),
+        Preload.get('run6'),
+        Preload.get('run7'),
+        Preload.get('run8'),
+      ],
       frames: { width, height },
       // frames: {width:50, height:50},
       animations: {

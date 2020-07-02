@@ -7,6 +7,7 @@ export default class extends Stage {
     super('canvas');
     this.bg = new Shape();
     this.addChild(this.bg);
+    this.enableMouseOver();
 
     window.addEventListener('resize', this.resize);
     this.resize();

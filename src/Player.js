@@ -1,6 +1,6 @@
 import Face from './Face';
 import Body from './Body';
-const { Container, Tween, Ease } = createjs;
+const { Container, Tween, Ease, Sound } = createjs;
 
 const UP_TIME = 800;
 const DOWN_TIME = 800;
@@ -66,6 +66,7 @@ class Player extends Container {
       if (Math.abs(p.x - q.x) < HIT_RANGE && Math.abs(p.y - q.y) < HIT_RANGE) {
         icon.hit();
         this.face.gotoAndPlay(icon.good ? 'happy' : 'sad');
+        Sound.play(icon.good ? 'eat' : 'stomp');
       }
     });
   };
@@ -84,7 +85,7 @@ class Player extends Container {
 
   jump = () => {
     if (this.jumping) return;
-
+    Sound.play('jump');
     Tween.get(this)
       .set({ jumping: true })
       .to({ y: this.getTop() }, UP_TIME, Ease.sineOut)
