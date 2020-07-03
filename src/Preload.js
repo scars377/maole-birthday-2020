@@ -61,9 +61,10 @@ const manifest = Object.entries({
 }).map(([id, src]) => ({ id, src }));
 
 export default class Preload {
-  static init(onComplete) {
+  static init(onProgress, onComplete) {
     const queue = new LoadQueue();
     queue.installPlugin(Sound);
+    queue.on('progress', onProgress);
     queue.on('complete', onComplete);
     queue.loadManifest(manifest);
 

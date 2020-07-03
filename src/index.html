@@ -42,13 +42,31 @@
     #loading {
       font-size: 2rem;
       font-family: sans-serif;
+      position: relative;
+      width: 8em;
+    }
+
+    #bar-container {
+      height: 8px;
+      border: 1px solid #fff8;
+    }
+
+    #bar {
+      width: 0;
+      height: 100%;
+      background: white;
     }
   </style>
 </head>
 
 <body>
   <div id='container'>
-    <span id="loading">Loading...</span>
+    <div id="loading">
+      <span>Loading...</span>
+      <div id="bar-container">
+        <div id="bar"></div>
+      </div>
+    </div>
     <button id="start">Start!</button>
     <canvas id="canvas" />
   </div>

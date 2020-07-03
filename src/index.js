@@ -9,34 +9,40 @@ const { Ticker } = createjs;
 
 window.addEventListener('load', () => {
   const loading = document.querySelector('#loading');
+  const bar = document.querySelector('#bar');
   const canvas = document.querySelector('#canvas');
   const start = document.querySelector('#start');
 
-  Preload.init(() => {
-    loading.style.display = 'none';
-    start.style.display = 'block';
+  Preload.init(
+    (e) => {
+      bar.style.width = `${100 * e.progress}%`;
+    },
+    () => {
+      loading.style.display = 'none';
+      start.style.display = 'block';
 
-    start.addEventListener('click', () => {
-      start.style.display = 'none';
-      canvas.style.display = 'block';
+      start.addEventListener('click', () => {
+        start.style.display = 'none';
+        canvas.style.display = 'block';
 
-      const stage = new Stage();
+        const stage = new Stage();
 
-      const bg = new Background();
-      const player = new Player();
-      const icons = new Icons();
-      const bgm = new BGM();
+        const bg = new Background();
+        const player = new Player();
+        const icons = new Icons();
+        const bgm = new BGM();
 
-      player.icons = icons;
+        player.icons = icons;
 
-      stage.addChild(bg);
-      stage.addChild(player);
-      stage.addChild(icons);
-      stage.addChild(bgm);
+        stage.addChild(bg);
+        stage.addChild(player);
+        stage.addChild(icons);
+        stage.addChild(bgm);
 
-      Ticker.setFPS(60);
-      Ticker.timingMode = Ticker.RAF_SYNCHED;
-      Ticker.on('tick', stage);
-    });
-  });
+        Ticker.setFPS(60);
+        Ticker.timingMode = Ticker.RAF_SYNCHED;
+        Ticker.on('tick', stage);
+      });
+    },
+  );
 });
