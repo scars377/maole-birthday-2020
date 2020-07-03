@@ -3,31 +3,48 @@ import { MOVE_SPEED } from './constants';
 
 const { Container, Bitmap } = createjs;
 
-const width = 1280;
-const height = 720;
+const WIDTH = 1280;
+const HEIGHT = 720;
 
 export default class extends Container {
   t = 0;
   constructor() {
     super();
+    const layer = new Container();
+    this.addChild(layer);
+    this.layer = layer;
 
-    const img1 = new Bitmap(Preload.get('bg'));
-    const img2 = img1.clone();
-    img2.x = width;
-    this.regY = height;
-    this.addChild(img1);
-    this.addChild(img2);
     this.on('added', this.added);
+    this.on('removed', this.removed);
   }
 
   added = () => {
-    this.y = this.stage.height;
     this.t = Date.now();
     this.on('tick', this.tick);
+    this._stage = this.stage;
+    this._stage.on('resize', this.resize);
+    this.resize();
   };
 
   removed = () => {
     this.off('tick', this.tick);
+    this._stage.off('resize', this.resize);
+  };
+
+  resize = () => {
+    const { width, height } = this._stage;
+    const img = new Bitmap(Preload.get('bg'));
+    const scale = height / HEIGHT;
+    this.scale = scale;
+    this.speed = (MOVE_SPEED * width) / scale;
+
+    this.layer.removeAllChildren();
+    const imgs = Math.ceil(width / (WIDTH * scale)) + 1;
+    for (let i = 0; i < imgs; i++) {
+      const m = img.clone();
+      m.x = i * WIDTH;
+      this.layer.addChild(m);
+    }
   };
 
   tick = () => {
@@ -35,9 +52,9 @@ export default class extends Container {
     const dt = t - this.t;
     this.t = t;
 
-    this.x -= MOVE_SPEED * dt;
-    if (this.x <= -width) {
-      this.x += width;
+    this.layer.x -= this.speed * dt;
+    if (this.layer.x <= -WIDTH) {
+      this.layer.x += WIDTH;
     }
   };
 }

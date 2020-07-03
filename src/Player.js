@@ -1,29 +1,45 @@
 import Face from './Face';
 import Body from './Body';
+import { LANES } from './constants';
+
 const { Container, Tween, Ease, Sound } = createjs;
 
 const UP_TIME = 800;
 const DOWN_TIME = 800;
 const HIT_RANGE = 80;
 
+const HEAD_X = 60;
+const HEAD_Y = -240;
+
 class Player extends Container {
+  top = 0;
+  bottom = 0;
+  head = { x: 60, y: -240 };
+
   _jumping = false;
 
   constructor() {
     super();
+
+    const layer = new Container();
+    this.layer = layer;
+    this.addChild(layer);
+
+    // const shape = new createjs.Shape();
+    // this.shape = shape;
+    // this.addChild(shape);
+
     this.body = new Body();
-    this.addChild(this.body);
+    layer.addChild(this.body);
 
     this.face = new Face();
-    this.addChild(this.face);
+    layer.addChild(this.face);
+
+    layer.regX = -10;
+    layer.regY = -30;
 
     this.on('added', this.added);
     this.on('removed', this.removed);
-
-    // this.on('click', (e) => {
-    //   console.log(e.stageX, e.stageY);
-    //   console.log(this.globalToLocal(e.stageX, e.stageY));
-    // });
   }
 
   get jumping() {
@@ -36,34 +52,34 @@ class Player extends Container {
     this.body.jumping = val;
   }
 
-  get head() {
-    return { x: 80, y: -320 };
-  }
-
-  get foot() {
-    return { x: 40, y: -80 };
-  }
-
   added = () => {
-    this.y = this.getGround();
-    this.position();
-    this.stage.on('click', this.jump);
-    this.stage.on('resize', this.position);
+    this._stage = this.stage;
+    this._stage.on('click', this.jump);
+    this._stage.on('resize', this.resize);
+    this.resize();
     this.on('tick', this.hitTest);
+
+    // this.stage.on('click', (e) => {
+    //   console.log(e.stageX, e.stageY);
+    //   console.log(this.globalToLocal(e.stageX, e.stageY));
+    // });
   };
   removed = () => {
+    this._stage.off('click', this.jump);
+    this._stage.off('resize', this.resize);
     this.off('tick', this.hitTest);
-    this.stage.off('click', this.jump);
-    this.stage.off('resize', this.position);
   };
   hitTest = () => {
     this.icons.icons.forEach((icon) => {
       if (icon.isHit) return;
 
       const p = this.globalToLocal(icon.x, icon.y);
-      const q = icon.good ? this.head : this.foot;
+      const q = icon.good ? this.head : { x: 0, y: 0 };
 
-      if (Math.abs(p.x - q.x) < HIT_RANGE && Math.abs(p.y - q.y) < HIT_RANGE) {
+      if (
+        Math.abs(p.x - q.x) < this.hitRange &&
+        Math.abs(p.y - q.y) < this.hitRange
+      ) {
         icon.hit();
         this.face.gotoAndPlay(icon.good ? 'happy' : 'sad');
         Sound.play(icon.good ? 'eat' : 'stomp');
@@ -71,25 +87,39 @@ class Player extends Container {
     });
   };
 
-  position = () => {
-    this.x = this.stage.canvas.width * 0.25;
-  };
+  resize = () => {
+    const { top, mid, bottom } = LANES;
+    const { width, height } = this._stage;
 
-  getGround = () => {
-    return this.stage.height;
-  };
+    // distance from mouth to foot
+    const scale = (height * (bottom - mid)) / -HEAD_Y;
 
-  getTop = () => {
-    return this.getGround() - 280;
+    this.layer.scale = scale;
+    this.hitRange = HIT_RANGE * scale;
+    this.head = {
+      x: HEAD_X * scale,
+      y: HEAD_Y * scale,
+    };
+    // this.shape.graphics
+    //   .c()
+    //   .f('red')
+    //   .r(-4, -4, 8, 8)
+    //   .r(this.head.x - 4, this.head.y - 4, 8, 8);
+
+    this.top = height * top;
+    this.bottom = height * bottom;
+    this.x = width * 0.3;
+    this.y = this.bottom;
   };
 
   jump = () => {
     if (this.jumping) return;
     Sound.play('jump');
+
     Tween.get(this)
       .set({ jumping: true })
-      .to({ y: this.getTop() }, UP_TIME, Ease.sineOut)
-      .to({ y: this.getGround() }, DOWN_TIME, Ease.sineIn)
+      .to({ y: this.top - this.head.y }, UP_TIME, Ease.sineOut)
+      .to({ y: this.bottom }, DOWN_TIME, Ease.sineIn)
       .set({ jumping: false });
   };
 }

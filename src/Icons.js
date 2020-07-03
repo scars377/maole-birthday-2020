@@ -1,7 +1,8 @@
 import Icon from './Icon';
 const { Container } = createjs;
 
-const TIME = 2000;
+const TIME = 1800;
+const TIME_VARY = 500;
 
 export default class extends Container {
   timer = -1;
@@ -19,7 +20,7 @@ export default class extends Container {
     this.timer = setTimeout(() => {
       this.addIcon();
       this.added();
-    }, TIME);
+    }, TIME + Math.random() * TIME_VARY);
   };
   removed = () => {
     clearTimeout(this.timer);

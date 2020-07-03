@@ -26,8 +26,8 @@ export default class extends Sprite {
       },
     });
     super(spriteSheet, 'run');
-    this.x = -width / 2;
-    this.y = -height;
+    this.regX = width / 2;
+    this.regY = height;
     this.framerate = 12;
   }
 

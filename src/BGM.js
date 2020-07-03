@@ -24,13 +24,20 @@ export default class extends Container {
 
   added = () => {
     this.instance = Sound.play('intro', { loop: -1, volume: 0.25 });
-
     const p = this.play;
     this.play = p;
-    this.x = this.stage.width;
+    this._stage = this.stage;
+    this._stage.on('resize', this.resize);
+    this.resize();
   };
   removed = () => {
     this.play = false;
+    this._stage.on('resize', this.resize);
+  };
+
+  resize = () => {
+    this.x = this._stage.width;
+    this.scale = 1;
   };
 
   get play() {

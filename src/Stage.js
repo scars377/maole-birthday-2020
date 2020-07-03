@@ -3,6 +3,7 @@ const { Stage, Shape } = createjs;
 export default class extends Stage {
   width = 1280;
   height = 720;
+
   constructor() {
     super('canvas');
     this.bg = new Shape();
@@ -16,11 +17,16 @@ export default class extends Stage {
     window.removeEventListener('resize', this.resize);
   }
   resize = () => {
-    const { width: w, height: h } = this;
-    // const { innerWidth: w, innerHeight: h } = window;
+    const { innerWidth: w, innerHeight: h } = window;
+    // const cover = Math.min(w/WIDTH, h/HEIGHT)
+    // const contain = Math.min(w/WIDTH, h/HEIGHT)
     this.canvas.width = w;
     this.canvas.height = h;
+    this.width = w;
+    this.height = h;
+
     this.bg.graphics.c().f('#b7e3ec').r(0, 0, w, h);
+
     this.dispatchEvent('resize');
   };
 }
