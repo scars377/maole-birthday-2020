@@ -7,24 +7,36 @@ import BGM from './BGM';
 
 const { Ticker } = createjs;
 
-const main = () => {
-  const stage = new Stage();
+window.addEventListener('load', () => {
+  const loading = document.querySelector('#loading');
+  const canvas = document.querySelector('#canvas');
+  const start = document.querySelector('#start');
 
-  const bg = new Background();
-  const player = new Player();
-  const icons = new Icons();
-  const bgm = new BGM();
+  Preload.init(() => {
+    loading.style.display = 'none';
+    start.style.display = 'block';
 
-  player.icons = icons;
+    start.addEventListener('click', () => {
+      start.style.display = 'none';
+      canvas.style.display = 'block';
 
-  stage.addChild(bg);
-  stage.addChild(player);
-  stage.addChild(icons);
-  stage.addChild(bgm);
+      const stage = new Stage();
 
-  Ticker.setFPS(60);
-  Ticker.timingMode = Ticker.RAF_SYNCHED;
-  Ticker.on('tick', stage);
-};
+      const bg = new Background();
+      const player = new Player();
+      const icons = new Icons();
+      const bgm = new BGM();
 
-Preload.init(main);
+      player.icons = icons;
+
+      stage.addChild(bg);
+      stage.addChild(player);
+      stage.addChild(icons);
+      stage.addChild(bgm);
+
+      Ticker.setFPS(60);
+      Ticker.timingMode = Ticker.RAF_SYNCHED;
+      Ticker.on('tick', stage);
+    });
+  });
+});

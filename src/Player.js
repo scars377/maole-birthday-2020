@@ -54,18 +54,18 @@ class Player extends Container {
 
   added = () => {
     this._stage = this.stage;
-    this._stage.on('click', this.jump);
+    this._stage.on('mousedown', this.jump);
     this._stage.on('resize', this.resize);
     this.resize();
     this.on('tick', this.hitTest);
 
-    // this.stage.on('click', (e) => {
+    // this.stage.on('mousedown', (e) => {
     //   console.log(e.stageX, e.stageY);
     //   console.log(this.globalToLocal(e.stageX, e.stageY));
     // });
   };
   removed = () => {
-    this._stage.off('click', this.jump);
+    this._stage.off('mousedown', this.jump);
     this._stage.off('resize', this.resize);
     this.off('tick', this.hitTest);
   };
